@@ -15,12 +15,6 @@ impl TennisGame {
             _player2_name: "player2".to_string(),
         }
     }
-    fn p1_score(&mut self) {
-        self.p1points += 1;
-    }
-    fn p2_score(&mut self) {
-        self.p2points += 1;
-    }
     pub fn clear(&mut self) {
         self.p1points = 0;
         self.p2points = 0;
@@ -32,28 +26,39 @@ impl TennisGame {
             self.p2_score();
         }
     }
+    fn p1_score(&mut self) {
+        self.p1points += 1;
+    }
+    fn p2_score(&mut self) {
+        self.p2points += 1;
+    }
     pub fn get_score(&self) -> String {
-        let mut result = "".to_string();
-        if (self.p1points == self.p2points) && (self.p1points < 3) {
+        if (self.p1points >= 4) && (self.p1points as i16 - self.p2points as i16) >= 2 {
+            "Win for player1".to_string()
+        } else if (self.p2points >= 4) && (self.p2points as i16 - self.p1points as i16) >= 2 {
+            "Win for player2".to_string()
+        } else if (self.p1points > self.p2points) && (self.p2points >= 3) {
+            "Advantage player1".to_string()
+        } else if (self.p2points > self.p1points) && (self.p1points >= 3) {
+            "Advantage player2".to_string()
+        } else if (self.p1points == self.p2points) && (self.p1points > 2) {
+            "Deuce".to_string()
+        } else if (self.p1points == self.p2points) && (self.p1points < 3) {
             let s = match self.p1points {
                 0 => "Love",
                 1 => "Fifteen",
                 2 => "Thirty",
                 _ => "",
             };
-            result = s.to_string() + "-All";
-        }
-        if (self.p1points == self.p2points) && (self.p1points > 2) {
-            result = "Deuce".to_string()
-        }
-        if (self.p1points > 0) && (self.p2points == 0) {
+            format!("{}-All", s)
+        } else if (self.p1points > 0) && (self.p2points == 0) {
             let s = match self.p1points {
                 1 => "Fifteen",
                 2 => "Thirty",
                 3 => "Forty",
                 _ => "",
             };
-            result = s.to_string() + "-Love"
+            format!("{}-Love", s)
         } else if (self.p2points > 0) && (self.p1points == 0) {
             let s = match self.p2points {
                 1 => "Fifteen",
@@ -61,7 +66,7 @@ impl TennisGame {
                 3 => "Forty",
                 _ => "",
             };
-            result = "Love-".to_string() + s
+            format!("Love-{}", s)
         } else if (self.p1points > self.p2points) && (self.p1points < 4) {
             let p1res = match self.p1points {
                 2 => "Thirty",
@@ -73,7 +78,7 @@ impl TennisGame {
                 2 => "Thirty",
                 _ => "",
             };
-            result = p1res.to_string() + "-" + p2res
+            format!("{}-{}", p1res, p2res)
         } else if (self.p2points > self.p1points) && (self.p2points < 4) {
             let p1res = match self.p1points {
                 1 => "Fifteen",
@@ -85,20 +90,9 @@ impl TennisGame {
                 3 => "Forty",
                 _ => "",
             };
-            result = p1res.to_string() + "-" + p2res
+            format!("{}-{}", p1res, p2res)
+        } else {
+            "".to_string()
         }
-        if (self.p1points > self.p2points) && (self.p2points >= 3) {
-            result = "Advantage player1".to_string()
-        }
-        if (self.p2points > self.p1points) && (self.p1points >= 3) {
-            result = "Advantage player2".to_string()
-        }
-        if (self.p1points >= 4) && (self.p1points as i16 - self.p2points as i16) >= 2 {
-            result = "Win for player1".to_string()
-        }
-        if (self.p2points >= 4) && (self.p2points as i16 - self.p1points as i16) >= 2 {
-            result = "Win for player2".to_string()
-        }
-        return result;
     }
 }
